@@ -1,19 +1,25 @@
----
-title: "Homework 1"
-author: Gwendolyn Thompson
-date: January 18, 2024
-output: github_document
+Homework 1
+================
+Gwendolyn Thompson
+January 18, 2024
 
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-```{r}
+``` r
 library('class')
 library('dplyr')
+```
 
+    ## 
+    ## Attaching package: 'dplyr'
+
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     filter, lag
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     intersect, setdiff, setequal, union
+
+``` r
 ## load binary classification example data from author website 
 ## 'ElemStatLearn' package no longer available
 load(url('https://biostat.app.vumc.org/wiki/pub/Main/CourseDSI5640/ESL.mixture.rda'))
@@ -36,7 +42,11 @@ plot_mix_data <- function(dat, datboot=NULL) {
 }
 
 plot_mix_data(dat)
+```
 
+![](hw1_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+
+``` r
 #CHANGE
 ## fit linear classifier
 fit_lc <- function(y, x) {
@@ -68,15 +78,25 @@ lc_pred <- matrix(lc_pred, length(dat$px1), length(dat$px2))
 contour(lc_pred,
         xlab=expression(x[1]),
         ylab=expression(x[2]))
+```
 
+![](hw1_files/figure-gfm/unnamed-chunk-1-2.png)<!-- -->
 
+``` r
 ## find the contours in 2D space such that lc_pred == 0.5
 lc_cont <- contourLines(dat$px1, dat$px2, lc_pred, levels=0.5)
 
 ## plot data and decision surface
 plot_mix_data(dat)
 sapply(lc_cont, lines)
+```
 
+![](hw1_files/figure-gfm/unnamed-chunk-1-3.png)<!-- -->
+
+    ## [[1]]
+    ## NULL
+
+``` r
 ## fit knn classifier
 ## use 5-NN to estimate probability of class assignment
 knn_fit <- knn(train=dat$x, test=dat$xnew, cl=dat$y, k=5, prob=TRUE)
@@ -89,16 +109,37 @@ contour(knn_pred,
         xlab=expression(x[1]),
         ylab=expression(x[2]),
         levels=c(0.25, 0.5, 0.75))
+```
 
+![](hw1_files/figure-gfm/unnamed-chunk-1-4.png)<!-- -->
 
+``` r
 ## find the contours in 2D space such that knn_pred == 0.5
 knn_cont <- contourLines(dat$px1, dat$px2, knn_pred, levels=0.5)
 
 ## plot data and decision surface
 plot_mix_data(dat)
 sapply(knn_cont, lines)
+```
 
+![](hw1_files/figure-gfm/unnamed-chunk-1-5.png)<!-- -->
 
+    ## [[1]]
+    ## NULL
+    ## 
+    ## [[2]]
+    ## NULL
+    ## 
+    ## [[3]]
+    ## NULL
+    ## 
+    ## [[4]]
+    ## NULL
+    ## 
+    ## [[5]]
+    ## NULL
+
+``` r
 ## do bootstrap to get a sense of variance in decision surface
 resample <- function(dat) {
   idx <- sample(1:length(dat$y), replace = T)
@@ -125,7 +166,11 @@ for(b in 1:3) {
   plot_mix_data(dat, datb)
   sapply(lc_cont, lines)
 }
+```
 
+![](hw1_files/figure-gfm/unnamed-chunk-1-6.png)<!-- -->
+
+``` r
 ## plot 5-NN classifier for three bootstraps
 par(mfrow=c(1,3))
 for(b in 1:3) {
@@ -145,7 +190,11 @@ for(b in 1:3) {
   plot_mix_data(dat, datb)
   sapply(knn_cont, lines)
 }
+```
 
+![](hw1_files/figure-gfm/unnamed-chunk-1-7.png)<!-- -->
+
+``` r
 ## plot 20-NN classifier for three bootstraps
 par(mfrow=c(1,3))
 for(b in 1:3) {
@@ -166,6 +215,12 @@ for(b in 1:3) {
   sapply(knn_cont, lines)
 }
 ```
-## Bias-Variance Tradeoff
 
-Enhancing the linear model by adding square terms can make it more flexible and reduces bias because the model can capture more complex, non-linear relationships in the data. But this can also lead to higher variance because the model might start to fit noise in the training data rather than just the underlying trend by overfitting. 
+![](hw1_files/figure-gfm/unnamed-chunk-1-8.png)<!-- --> \##
+Bias-Variance Tradeoff
+
+Enhancing the linear model by adding square terms can make it more
+flexible and reduces bias because the model can capture more complex,
+non-linear relationships in the data. But this can also lead to higher
+variance because the model might start to fit noise in the training data
+rather than just the underlying trend by overfitting.
